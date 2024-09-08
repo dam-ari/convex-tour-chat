@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Install TailwindCSS as a development dependency
+npm install -D tailwindcss
+
+# Initialize TailwindCSS configuration file
+npx tailwindcss init
+
+# Check if an argument was passed for an alternative configuration
+if [ -n "$1" ]; then
+  # Use the provided file content if an argument file is given
+  cp "$1" tailwind.config.js
+else
+  # Write the default configuration to tailwind.config.js
+  echo "/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}" > tailwind.config.js
+fi
+
+# Create styles.css file in the src folder with Tailwind directives
+mkdir -p src
+echo "@tailwind base;
+@tailwind components;
+@tailwind utilities;" > src/styles.css
+
+# Start Tailwind CSS CLI in watch mode
+npx tailwindcss -i ./src/styles.css -o ./src/output.css --watch &
+
+# Print the installed version of TailwindCSS
+echo "TailwindCSS installed version:"
+npm list tailwindcss
+
+# install postcss-cli and autoprefixer
+npm install -D postcss-cli autoprefixer
+
+# Create a postcss.config.js file
+echo "module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}" > postcss.config.js
+
+# Install DaisyUI
+npm install -D daisyui@latest
+
+# Add DaisyUI to the TailwindCSS plugins in tailwind.config.js
+sed -i "" "s/plugins: \[/plugins: \[require(\"daisyu\"),/" tailwind.config.js
+
+
+echo "DaisyUI has been added to TailwindCSS plugins."
+
+
+# Notify user of script completion
+echo "Setup complete. TailwindCSS and DaisyUI have been configured."
+
+# Delete the last "}" from the tailwind.config.js file
+sed -i '' -e '$ d' tailwind.config.js
+
+# Add at the end of the file tailwind.config.js the themes array 
+echo "  daisyui: {
+    themes: [
+      //\"light\",
+      //\"dark\",
+      //\"cupcake\",
+      //\"bumblebee\",
+      //\"emerald\",
+      //\"corporate\",
+      //\"synthwave\",
+      //\"retro\",
+      //\"cyberpunk\",
+      //\"valentine\",
+      //\"halloween\",
+      //\"garden\",
+      //\"forest\",
+      //\"aqua\",
+      //\"lofi\",
+      //\"pastel\",
+      //\"fantasy\",
+      //\"wireframe\",
+      //\"black\",
+      //\"luxury\",
+      //\"dracula\",
+      //\"cmyk\",
+      //\"autumn\",
+      //\"business\",
+      //\"acid\",
+      //\"lemonade\",
+      //\"night\",
+      //\"coffee\",
+      //\"winter\",
+      //\"dim\",
+      //\"nord\",
+      //\"sunset\"
+    ],
+  },
+}" >> tailwind.config.js
+
+# Notify user of script completion
+echo "Setup complete. TailwindCSS and DaisyUI have been configured."
